@@ -1,10 +1,10 @@
 package com.move.heart.service;
 
 import com.move.heart.music.util.netease.NeteaseMusicUtils;
-import com.move.heart.music.util.netease.bean.Profile;
-import com.move.heart.music.util.netease.bean.UserDetailResp;
-import com.move.heart.music.util.netease.bean.UserDetailResponseByNick;
-import com.move.heart.music.util.netease.bean.UserprofilesItem;
+import com.move.heart.music.util.netease.response.Profile;
+import com.move.heart.music.util.netease.response.UserDetailResp;
+import com.move.heart.music.util.netease.response.UserDetailResponseByNick;
+import com.move.heart.music.util.netease.response.UserprofilesItem;
 import com.move.heart.service.bean.Gender;
 import com.move.heart.service.bean.UserInfo;
 import lombok.SneakyThrows;
@@ -63,7 +63,13 @@ public class SearchService {
                 .collect(Collectors.toList());
     }
 
-    public List<UserInfo> searchSong(String query) {
+    public List<UserInfo> searchUserMusic(String userId) {
+        // step 1.查询 接口
+
+        // step 2.对比上一次的快照---》 正在听 保存当前快照数据
+        // diff
+        // step 3.对比昨天12点的数据
+        // diff todo
         return null;
     }
 

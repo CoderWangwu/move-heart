@@ -1,4 +1,4 @@
-package com.move.heart.music.util.netease.bean;
+package com.move.heart.music.util.netease.response;
 
 import lombok.Data;
 
