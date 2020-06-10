@@ -6,7 +6,6 @@ import com.move.heart.music.util.bean.BaseRequestData;
 import com.move.heart.music.util.bean.CryptoResult;
 import com.move.heart.music.util.bean.CryptoType;
 import com.move.heart.music.util.bean.Temp;
-import okhttp3.OkHttpClient;
 import org.apache.commons.lang.StringUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -23,10 +22,9 @@ import static com.move.heart.music.util.Constants.CSRF_PATTERN;
  * @Date: 2020/5/30 12:01 上午
  */
 public class MyHttpClient {
-    private static final OkHttpClient client = new OkHttpClient();
 
-    private static final Pattern wapi = Pattern.compile("\\w*api");
-    private static final String[] userAgentList = {
+    private static final Pattern WAPI = Pattern.compile("\\w*api");
+    private static final String[] USER_AGENT_LIST = {
             "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1",
             "Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1",
             "Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Mobile Safari/537.36",
@@ -52,15 +50,17 @@ public class MyHttpClient {
             public int getIndex() {
                 return (int) Math.floor(Math.random() * 7);
             }
-        }, PC {
+        },
+        PC {
             @Override
             public int getIndex() {
                 return (int) Math.floor(Math.random() * 5) + 8;
             }
-        }, DEFAULT {
+        },
+        DEFAULT {
             @Override
             public int getIndex() {
-                return (int) Math.floor(Math.random() * userAgentList.length);
+                return (int) Math.floor(Math.random() * USER_AGENT_LIST.length);
             }
         };
 
@@ -70,7 +70,7 @@ public class MyHttpClient {
 
 
     private static String getUserAgent(UserAgentType ua) {
-        return userAgentList[ua.getIndex()];
+        return USER_AGENT_LIST[ua.getIndex()];
     }
 
     public static String post(String url, BaseRequestData requestData, CryptoType cryptoType) throws Exception {
@@ -93,10 +93,10 @@ public class MyHttpClient {
                 requestData.setCsrf_token(csrf.group());
             }
             data = CryptoType.WEAPI.crypto("", requestData);
-            Matcher matcher = wapi.matcher(url);
+            Matcher matcher = WAPI.matcher(url);
             url = matcher.replaceAll("weapi");
         } else if (CryptoType.LINUX_API.equals(cryptoType)) {
-            Matcher matcher = wapi.matcher(url);
+            Matcher matcher = WAPI.matcher(url);
             Temp api = Temp.builder().method("POST").params(requestData).url(matcher.replaceAll("api")).build();
             data = CryptoType.LINUX_API.crypto("", api);
             heads.put("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36");
@@ -118,7 +118,7 @@ public class MyHttpClient {
             //            if (cookie.MUSIC_A) header["MUSIC_A"] = cookie.MUSIC_A
             requestData.setHeader(head);
             data = CryptoType.EAPI.crypto(url, requestData);
-            Matcher matcher = wapi.matcher(url);
+            Matcher matcher = WAPI.matcher(url);
             url = matcher.replaceAll("eapi");
         }
         // 上线需要代理

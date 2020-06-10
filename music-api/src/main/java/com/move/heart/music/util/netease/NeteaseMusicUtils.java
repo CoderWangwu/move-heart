@@ -60,8 +60,8 @@ public class NeteaseMusicUtils {
      * @return
      * @throws Exception
      */
-    public static UserRecordResp queryUserRecord(String userId, int type) throws Exception {
-        UserRecordRequest recordRequest = UserRecordRequest.builder().type(type).uid(userId).build();
+    public static UserRecordResp queryUserRecord(String userId, RecordType type) throws Exception {
+        UserRecordRequest recordRequest = UserRecordRequest.builder().type(type.getCode()).uid(userId).build();
         String url = "https://music.163.com/weapi/v1/play/record";
         String result = MyHttpClient.post(url, recordRequest, CryptoType.WEAPI);
         return JsonUtil.json2Object(result, UserRecordResp.class);
@@ -69,7 +69,7 @@ public class NeteaseMusicUtils {
 
     public static void main(String[] args) throws Exception {
         //SearchRequest searchRequest = SearchRequest.builder().s("海阔天空").limit(10).offset(0).type(1).build();
-        Object search = queryUserRecord("454250112", 1);
+        //Object search = queryUserRecord("454250112", 1);
 
     }
 }

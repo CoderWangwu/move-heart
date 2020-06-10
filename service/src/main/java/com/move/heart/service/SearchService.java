@@ -1,11 +1,15 @@
 package com.move.heart.service;
 
+import com.move.heart.music.util.concurrent.FutureUtils;
+import com.move.heart.music.util.concurrent.NamedThreadFactory;
 import com.move.heart.music.util.netease.NeteaseMusicUtils;
+import com.move.heart.music.util.netease.RecordType;
 import com.move.heart.music.util.netease.response.Profile;
 import com.move.heart.music.util.netease.response.UserDetailResp;
 import com.move.heart.music.util.netease.response.UserDetailResponseByNick;
 import com.move.heart.music.util.netease.response.UserprofilesItem;
 import com.move.heart.service.bean.Gender;
+import com.move.heart.service.bean.SongRecordInfo;
 import com.move.heart.service.bean.UserInfo;
 import lombok.SneakyThrows;
 import org.apache.commons.collections.CollectionUtils;
@@ -13,8 +17,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -24,6 +34,11 @@ import java.util.stream.Collectors;
 @Service
 public class SearchService {
 
+    private ExecutorService executorService = new ThreadPoolExecutor(100, 1000, 2,
+            TimeUnit.MINUTES,
+            new ArrayBlockingQueue<Runnable>(100),
+            new NamedThreadFactory("SearchService"),
+            new ThreadPoolExecutor.CallerRunsPolicy());
 
     @SneakyThrows
     public Optional<UserInfo> searchById(String uid) {
@@ -63,14 +78,39 @@ public class SearchService {
                 .collect(Collectors.toList());
     }
 
-    public List<UserInfo> searchUserMusic(String userId) {
+    public List<SongRecordInfo> searchUserMusic(String userId) {
         // step 1.查询 接口
-
+        Future<List<SongRecordInfo>> songRecordInfosFuture = executorService.submit(()
+                -> getSongRecordInfos(userId));
         // step 2.对比上一次的快照---》 正在听 保存当前快照数据
+        Future<Map<String, SongRecordInfo>> yesterDaySongRecordInfosFuture = executorService.submit(()
+                -> getYesterDaySongRecordInfos(userId));
+
+        List<SongRecordInfo> songRecordInfos = FutureUtils.getWithDefault(songRecordInfosFuture, 200, Collections.emptyList());
+
+        Map<String, SongRecordInfo> yesterDaySongRecordInfos = FutureUtils.getWithDefault(yesterDaySongRecordInfosFuture, 200, Collections.emptyMap());
         // diff
+        return songRecordInfos.stream().filter(o -> {
+            SongRecordInfo songRecordInfo = yesterDaySongRecordInfos.get(o.getSongId());
+            if (Objects.isNull(songRecordInfo)) {
+                return true;
+            }
+            return songRecordInfo.getScore() != o.getScore();
+        }).collect(Collectors.toList());
         // step 3.对比昨天12点的数据
         // diff todo
-        return null;
+    }
+
+    @SneakyThrows
+    private List<SongRecordInfo> getSongRecordInfos(String userId) {
+        return Convert.convertRecentWeek(NeteaseMusicUtils.queryUserRecord(userId, RecordType.RENCENT_WEEK), RecordType.RENCENT_WEEK);
+    }
+
+    @SneakyThrows
+    private Map<String, SongRecordInfo> getYesterDaySongRecordInfos(String userId) {
+        List<SongRecordInfo> songRecordInfos = Convert.convertRecentWeek(NeteaseMusicUtils.queryUserRecord(userId, RecordType.RENCENT_WEEK), RecordType.RENCENT_WEEK);
+        return songRecordInfos.stream()
+                .collect(Collectors.toMap(SongRecordInfo::getSongId, o -> o));
     }
 
     public static void main(String[] args) {
