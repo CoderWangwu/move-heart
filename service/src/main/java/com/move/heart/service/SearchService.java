@@ -36,7 +36,7 @@ public class SearchService {
 
     private ExecutorService executorService = new ThreadPoolExecutor(100, 1000, 2,
             TimeUnit.MINUTES,
-            new ArrayBlockingQueue<Runnable>(100),
+            new ArrayBlockingQueue<>(100),
             new NamedThreadFactory("SearchService"),
             new ThreadPoolExecutor.CallerRunsPolicy());
 
