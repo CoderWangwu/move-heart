@@ -1,18 +1,14 @@
-package com.move.heart.request;
+package com.move.heart.dao.bean;
 
-import com.move.heart.service.bean.Gender;
 import lombok.Data;
 
 /**
  * @Author: wg
- * @Date: 2020/6/6 9:52 下午
+ * @Date: 2020/6/13 5:21 下午
  */
+
 @Data
-public class ConcernRequest {
-    /**
-     * 用户微信openId唯一名称
-     */
-    private String currentUser;
+public class UserInfoEntity {
 
     /**
      * 关注用户的userId
@@ -32,10 +28,18 @@ public class ConcernRequest {
     /**
      * 性别
      */
-    private Gender gender;
+    private int gender;
 
     /**
      * 位置code
      */
     private String locationCode;
+    /**
+     * 0:网易
+     */
+    private int type;
+
+    private long createTime;
+
+    private long updateTime;
 }

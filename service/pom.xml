@@ -22,7 +22,11 @@
             <groupId>com.move.heart</groupId>
             <artifactId>music-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.move.heart</groupId>
+            <artifactId>dao</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <build>
