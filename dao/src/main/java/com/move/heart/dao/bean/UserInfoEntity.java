@@ -10,6 +10,7 @@ import lombok.Data;
 @Data
 public class UserInfoEntity {
 
+    private long id;
     /**
      * 关注用户的userId
      */

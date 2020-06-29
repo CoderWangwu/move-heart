@@ -22,7 +22,7 @@ import java.util.Map;
  * @Date: 2020/6/6 10:36 下午
  * 查询信息接口
  */
-@RestController
+@RestController("/query")
 public class SearchController {
 
     @Resource

@@ -14,6 +14,6 @@ public interface UserMusicRecordDao {
 
     void batchSaveUserMusicRecord(List<UserMusicRecordEntity> userMusicRecordEntityList);
 
-    List<UserMusicRecordEntity> queryeUserMusicRecord(String netEaseUserId);
+    List<UserMusicRecordEntity> queryeUserMusicRecord(String netEaseUserId, int type);
 
 }

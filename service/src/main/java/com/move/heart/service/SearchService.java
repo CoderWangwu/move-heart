@@ -17,7 +17,6 @@ import lombok.SneakyThrows;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +36,7 @@ import java.util.stream.Collectors;
 @Service
 public class SearchService {
 
-    @Resource
+    //@Resource
     private UserMusicRecordDao userMusicRecordDao;
 
     private ExecutorService executorService = new ThreadPoolExecutor(100, 1000, 2,
@@ -112,7 +111,7 @@ public class SearchService {
 
     @SneakyThrows
     private Map<String, SongRecordInfo> getYesterDaySongRecordInfos(String userId) {
-        List<UserMusicRecordEntity> userMusicRecordEntities = userMusicRecordDao.queryeUserMusicRecord(userId);
+        List<UserMusicRecordEntity> userMusicRecordEntities = userMusicRecordDao.queryeUserMusicRecord(userId, 1);
         if (CollectionUtils.isEmpty(userMusicRecordEntities)) {
             return Collections.emptyMap();
         }

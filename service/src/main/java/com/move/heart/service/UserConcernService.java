@@ -6,7 +6,6 @@ import com.move.heart.service.bean.SongRecordInfo;
 import com.move.heart.service.bean.UserInfo;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -16,13 +15,13 @@ import java.util.List;
 @Service
 public class UserConcernService {
 
-    @Resource
+    //@Resource
     private UserInfoDao userInfoDao;
 
-    @Resource
+    //@Resource
     private RelationDao relationDao;
 
-    @Resource
+    //@Resource
     private SearchService searchService;
 
     public void concern(UserInfo userInfo, String currentUser) {

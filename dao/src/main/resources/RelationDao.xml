@@ -1,5 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+
 <mapper namespace="com.move.heart.dao.RelationDao">
-    <insert id="concern"></insert>
+    <resultMap id="RelationEntity" type="com.move.heart.dao.bean.RelationEntity">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="net_ease_user_id" property="netEaseUserId" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+
+    <insert id="concern" parameterType="com.move.heart.dao.bean.RelationEntity">
+        INSERT INTO
+                tbl_relation
+                (user_id,net_ease_user_id)
+                values
+                (#{user_id},#{net_ease_user_id})
+    </insert>
+
+    <select id="queryUserConcern" resultMap="RelationEntity">
+        SELECT
+            id,
+            user_id,
+            net_ease_user_id,
+            create_time
+        FROM
+            tbl_relation
+        WHERE
+            user_id=#{userId}
+            AND
+            status=0
+        LIMIT
+            #{start},#{limit}
+    </select>
 </mapper>

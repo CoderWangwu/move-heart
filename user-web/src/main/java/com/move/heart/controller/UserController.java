@@ -28,6 +28,11 @@ public class UserController {
         userConcernService.concern(ConvertUtils.convert(concernRequest), concernRequest.getCurrentUser());
     }
 
+    @RequestMapping("/test")
+    public Object test() {
+        // step 1. 参数校验
+        return 2;
+    }
     /**
      * 查询用户听歌记录
      * @param userMusicRecord

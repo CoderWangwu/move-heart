@@ -9,6 +9,8 @@ import lombok.Data;
 @Data
 public class UserMusicRecordEntity {
 
+    private long id;
+
     private String netEaseUserId;
 
     private String songId;
